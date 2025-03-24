@@ -3,7 +3,7 @@
   "name": "Focus Guard",
   "version": "1.0",
   "permissions": [
-    "declarativeNetRequest","storage"
+    "declarativeNetRequest","storage","tabs"
   ],
   "host_permissions": [
     "<all_urls>"
