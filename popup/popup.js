@@ -3,13 +3,13 @@ chrome.storage.local.get('blockedSites', (data) => {
     document.getElementById('blocked-count').textContent = count;
   });
   
-  document.getElementById('open-options').onclick = () => {
+  document.getElementById('edit-block-list').onclick = () => {
     chrome.runtime.openOptionsPage();
   };
 
 
   // 直接在当前网址进行封锁 
-document.getElementById('block-rightnow').addEventListener('click', function() {
+document.getElementById('block-current-site').addEventListener('click', function() {
   // 获得当前访问网址
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     const url = new URL(tabs[0].url);

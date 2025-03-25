@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <h1>Focus Guard</h1>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <h1>Focus Guard</h1>
   <p>block website numbers: <span id="blocked-count"> 0 </span></p>
-  <button id="open-options">manage</button>
-  <button id="block-rightnow">block this website</button>
-  <script src="popup.js"></script>
+  <div class="content">
+    <div id="current-site" class="current-site"> </div>
+    <button id="block-current-site" class="block-btn">Block this site</button>
+    <button id="edit-block-list" class="edit-btn">Edit block list</button>
+  </div>
+   <script src="popup.js"></script>
 </body>
-</html>
+</html> 

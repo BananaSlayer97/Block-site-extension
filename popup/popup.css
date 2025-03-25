@@ -1,23 +1,54 @@
 body {
-    font-family: Arial, sans-serif;
-    width: 400px;
-    padding: 10px;
-  }
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  width: 300px; /* 弹出窗口的宽度 */
+  background-color: #fff;
+  text-align: center;
+}
+
+.content {
+  padding: 20px;
+}
+
+.current-site {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  word-break: break-all; /* 防止长域名溢出 */
+}
+
+.block-btn {
+  background-color: #34c759; /* 绿色 */
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 80%;
+  margin-bottom: 10px;
+  transition: background-color 0.3s;
+}
+
+.block-btn:hover {
+  background-color: #2ea44f; /* 深绿色（悬停效果） */
+}
+
+.edit-btn {
+  background-color: #e0e0e0; /* 灰色 */
+  color: #666;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 80%;
+  transition: background-color 0.3s;
+}
+
+.edit-btn:hover {
+  background-color: #d0d0d0; /* 深灰色（悬停效果） */
+}
+
   
-  h1 {
-    font-size: 24px;
-    color: #333;
-  }
-  
-  button {
-    padding: 8px;
-    background-color: #4285f4;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  button:hover {
-    background-color: #3367d6;
-  }
