@@ -1,13 +1,20 @@
+<!-- options.html -->
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Focus Guard - Manage Block Sites</title>
   <link rel="stylesheet" href="options.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-  <h1>manage block sites</h1>
-  <input type="text" id="site-input" placeholder="input the block site">
-  <button id="add-site">add</button>
-  <ul id="site-list"></ul>
+  <div class="container">
+    <h1>Manage Block Sites</h1>
+    <div class="input-section">
+      <input id="site-input" type="text" placeholder="Enter website to block (e.g., example.com)">
+      <button id="add-site" class="add-btn">Add</button>
+    </div>
+    <ul id="site-list" class="site-list"></ul>
+  </div>
   <script src="options.js"></script>
 </body>
 </html>
