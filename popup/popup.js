@@ -1,14 +1,14 @@
 chrome.storage.local.get('blockedSites', (data) => {
-    const count = data.blockedSites?.length || 0;
-    document.getElementById('blocked-count').textContent = count;
-  });
-  
-  document.getElementById('edit-block-list').onclick = () => {
+    // The 'blocked-count' element is commented out in popup.html, so this line is no longer needed.
+    // const count = data.blockedSites?.length || 0;
+    // document.getElementById('blocked-count').textContent = count;
+});
+
+document.getElementById('edit-block-list').onclick = () => {
     chrome.runtime.openOptionsPage();
-  };
+};
 
-
-  // 直接在当前网址进行封锁 
+// 直接在当前网址进行封锁
 document.getElementById('block-current-site').addEventListener('click', function() {
   // 获得当前访问网址
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -21,20 +21,19 @@ document.getElementById('block-current-site').addEventListener('click', function
     let blockedSites = data.blockedSites || [];
     // 检查是否已存在
     if (blockedSites.includes(site)) {
-      alert('already blocked');
+      alert('This site is already blocked!');
       return;
     }
     // 添加到黑名单
     blockedSites.push(site);
     // 保存回 chrome.storage.local
     chrome.storage.local.set({ blockedSites }, function() {
-      console(`block done ${site}`);
+      console.log(`Block done: ${site}`); // Fixed syntax error here
+      // No need to close the tab and redirect manually.
+      // The background script's declarativeNetRequest rules will handle the blocking
+      // automatically when the user tries to navigate to this site again or refreshes.
+      alert(`'${site}' has been added to your block list. Refresh the page or navigate away for the block to take effect.`);
     });
-    //关闭当前标签页
-    chrome.tabs.remove(tabs[0].id);
-    // 跳转到 blocked.html
-    chrome.tabs.create({ url: 'blocked.html' });
   });
-
   });
 });
