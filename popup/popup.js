@@ -1,3 +1,18 @@
+// popup.js
+
+// Include the utility function directly or ensure it's loaded before this script
+// Re-defining cleanSiteUrl here for now, as direct module imports are not standard
+// for plain JS Chrome extensions without a build step.
+// A better approach would be to include urlUtils.js as a script in options.html and popup.html
+// before options.js and popup.js, making cleanSiteUrl globally available.
+// I will update the HTML files to include this utility script.
+function cleanSiteUrl(urlString) {
+  let site = urlString.replace(/^https?:\/\//, ''); // Remove http/https
+  site = site.split('/')[0]; // Get only the domain part
+  site = site.replace(/^www\./, ''); // Remove www.
+  return site;
+}
+
 chrome.storage.local.get('blockedSites', (data) => {
     // The 'blocked-count' element is commented out in popup.html, so this line is no longer needed.
     // const count = data.blockedSites?.length || 0;
@@ -11,9 +26,7 @@ document.getElementById('edit-block-list').onclick = () => {
 // Display the current site in the popup
 chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
   const url = new URL(tabs[0].url);
-  let site = url.hostname;
-  // Remove www.
-  site = site.replace(/^www\./, '');
+  let site = cleanSiteUrl(url.hostname); // Use the utility function
   document.getElementById('current-site').textContent = site;
 });
 
@@ -22,9 +35,7 @@ document.getElementById('block-current-site').addEventListener('click', function
   // 获得当前访问网址
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     const url = new URL(tabs[0].url);
-    let site = url.hostname;
-    // 移除 www.
-    site = site.replace(/^www\./, '');
+    let site = cleanSiteUrl(url.hostname); // Use the utility function
    // 从 chrome.storage.local 获取当前的 blockedSites
    chrome.storage.local.get('blockedSites', function(data) {
     let blockedSites = data.blockedSites || [];
