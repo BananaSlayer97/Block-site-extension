@@ -40,15 +40,14 @@ function updateRules() {
 }
 
 // 单独封装添加新规则的函数
+// 改进域名匹配逻辑
 function addNewRules() {
   if (blockList.length === 0) {
     console.log("黑名单为空，无需添加规则");
     return;
   }
   
-  // 创建规则数组
   const rules = blockList.map((site, index) => {
-    // 确保网站格式正确
     const cleanSite = site.replace(/^https?:\/\//, '').split('/')[0];
     
     return {
@@ -61,8 +60,8 @@ function addNewRules() {
         }
       },
       condition: {
-        // 使用域名匹配模式
-        urlFilter: `*://*.${cleanSite}/*`,
+        // 同时匹配主域名和子域名
+        urlFilter: `*://*${cleanSite}/*`,
         resourceTypes: ["main_frame"]
       }
     };

@@ -25,34 +25,51 @@ function renderList() {
 function removeSite(site) {
   blockedSites = blockedSites.filter(s => s !== site);
   chrome.storage.local.set({ blockedSites }, function() {
-    console.log(`Removed from the blacklist: ${site}`);
-    chrome.storage.local.get('blockedSites', (data) => {
-      console.log('Memory acknowledgement:', data.blockedSites);
-    });
+    if (chrome.runtime.lastError) {
+      console.error('保存失败:', chrome.runtime.lastError);
+      alert('删除失败，请重试');
+      return;
+    }
+    console.log(`已从黑名单移除: ${site}`);
+    renderList();
   });
-  renderList();
 }
 
 document.getElementById('add-site').addEventListener('click', function() {
   let site = document.getElementById('site-input').value.trim();
   
-  site = site.replace(/^https?:\/\//, '');
-  site = site.split('/')[0];
-  site = site.replace(/^www\./, '');
+  // 改进网站格式验证
+  site = site.replace(/^https?:\/\//, '').split('/')[0].replace(/^www\./, '');
   
-  if (site && site.includes('.') && !site.includes(' ') && !blockedSites.includes(site)) {
-    blockedSites.push(site);
-    chrome.storage.local.set({ blockedSites }, function() {
-      console.log(`You have been added to the blacklist: ${site}`);
-      chrome.storage.local.get('blockedSites', (data) => {
-        console.log('Memory acknowledgement:', data.blockedSites);
-      });
-    });
+  // 更严格的域名验证
+  const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?\.[a-zA-Z]{2,}$/;
+  
+  if (!site) {
+    alert('请输入网站域名');
+    return;
+  }
+  
+  if (!domainRegex.test(site)) {
+    alert('请输入有效的域名格式，例如: example.com');
+    return;
+  }
+  
+  if (blockedSites.includes(site)) {
+    alert('该网站已在阻止列表中');
+    return;
+  }
+  
+  blockedSites.push(site);
+  chrome.storage.local.set({ blockedSites }, function() {
+    if (chrome.runtime.lastError) {
+      console.error('保存失败:', chrome.runtime.lastError);
+      alert('添加失败，请重试');
+      return;
+    }
+    console.log(`已添加到黑名单: ${site}`);
     document.getElementById('site-input').value = '';
     renderList();
-  } else {
-    alert('Please provide a valid website domain name, for example: example.com');
-  }
+  });
 });
 
 chrome.storage.local.get('blockedSites', function(data) {
