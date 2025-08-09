@@ -1,81 +1,247 @@
-<!-- blocked.html -->
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Website Blocked - Focus Guard</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Roboto', Arial, sans-serif;
-      background-color: #f5f7fa; /* 浅灰色背景 */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      text-align: center;
-      color: #333;
-    }
-
-    .container {
-      background-color: #fff;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
-      width: 90%;
-    }
-
-    .icon {
-      font-size: 48px;
-      color: #e74c3c; /* 红色 */
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      font-size: 28px;
-      font-weight: 600;
-      color: #e74c3c; /* 红色 */
-      margin-bottom: 10px;
-    }
-
-    p {
-      font-size: 16px;
-      color: #666;
-      margin-bottom: 30px;
-    }
-
-    .work-btn {
-      padding: 12px 30px;
-      font-size: 16px;
-      font-weight: 500;
-      color: #fff;
-      background-color: #4a90e2; /* 蓝色 */
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.1s;
-    }
-
-    .work-btn:hover {
-      background-color: #357abd; /* 深蓝色 */
-      transform: translateY(-2px);
-    }
-
-    .work-btn:active {
-      transform: translateY(0);
-    }
-  </style>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>网站已被屏蔽 - Focus Guard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        /* 简化的背景效果 - 只保留静态渐变 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 500px;
+            padding: 40px 30px;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        /* 简化的扫描线 - 降低频率 */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), transparent);
+            animation: scan 4s ease-in-out infinite;
+        }
+        
+        @keyframes scan {
+            0%, 80% { transform: translateX(-100%); opacity: 0; }
+             90% { opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+        
+        .shield-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.5));
+            animation: gentlePulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes gentlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .title {
+            font-family: 'Orbitron', monospace;
+            font-size: 32px;
+            font-weight: 700;
+            color: #ef4444;
+            margin-bottom: 16px;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+            letter-spacing: 2px;
+        }
+        
+        .message {
+            font-size: 16px;
+            color: #cbd5e1;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        
+        .site-name {
+            font-family: 'Orbitron', monospace;
+            font-size: 20px;
+            font-weight: 600;
+            color: #3b82f6;
+            margin: 20px 0;
+            padding: 12px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            text-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .content-filter-notice {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            margin: 20px 0;
+            color: #f59e0b;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* 简化的按钮悬停效果 */
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            backdrop-filter: blur(5px);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .shield-icon {
+                font-size: 48px;
+            }
+            
+            .buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+        
+        /* 简化的入场动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .container {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* 减少不必要的动画 */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">  
-    <span class="material-icons icon">block</span>
-    <h1>网站已被屏蔽</h1>
-    <p id="blocked-message">您正在尝试访问一个被屏蔽的网站。</p>
-    <button id="back-btn" class="work-btn">返回工作</button>
-  </div>
-  <script src="blocked.js"></script>
+    <div class="container">
+        <div class="shield-icon">🛡️</div>
+        <h1 class="title">ACCESS DENIED</h1>
+        <p class="message">此网站已被 Focus Guard 屏蔽</p>
+        <div class="site-name" id="siteName">未知网站</div>
+        <div class="content-filter-notice" id="contentFilterNotice">
+            ⚠️ 智能内容过滤已激活
+        </div>
+        <div class="buttons">
+            <button id="goBack" class="btn btn-primary">
+                ⬅️ 返回上一页
+            </button>
+            <button id="openOptions" class="btn btn-secondary">
+                ⚙️ 管理屏蔽列表
+            </button>
+        </div>
+    </div>
+    
+    <script src="blocked.js"></script>
 </body>
 </html>

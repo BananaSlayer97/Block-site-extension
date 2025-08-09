@@ -1,54 +1,474 @@
-body {
+/* 超炫酷科技风格 Popup 设计 */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
-  width: 300px; /* 弹出窗口的宽度 */
-  background-color: #fff;
-  text-align: center;
+  box-sizing: border-box;
 }
 
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  width: 380px;
+  min-height: 520px;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+  color: #fff;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 动态粒子背景 */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(2px 2px at 20px 30px, #00ffff, transparent),
+    radial-gradient(2px 2px at 40px 70px, #ff00ff, transparent),
+    radial-gradient(1px 1px at 90px 40px, #ffff00, transparent),
+    radial-gradient(1px 1px at 130px 80px, #00ff00, transparent),
+    radial-gradient(2px 2px at 160px 30px, #ff0080, transparent);
+  background-repeat: repeat;
+  background-size: 200px 100px;
+  animation: sparkle 20s linear infinite;
+  opacity: 0.6;
+  z-index: 1;
+}
+
+@keyframes sparkle {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-100px); }
+}
+
+/* 扫描线效果 */
+body::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ffff, transparent);
+  animation: scan 3s linear infinite;
+  z-index: 10;
+}
+
+@keyframes scan {
+  0% { transform: translateY(0px); opacity: 1; }
+  100% { transform: translateY(520px); opacity: 0; }
+}
+
+.popup-container {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+}
+
+/* 头部区域 - 全息效果 */
+.header {
+  background: rgba(0, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  padding: 24px;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+  animation: hologram 4s linear infinite;
+}
+
+@keyframes hologram {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.logo {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+  border-radius: 16px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 0 20px rgba(0, 255, 255, 0.5),
+    0 0 40px rgba(255, 0, 255, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+  animation: logoGlow 2s ease-in-out infinite alternate;
+  position: relative;
+  z-index: 3;
+}
+
+@keyframes logoGlow {
+  from {
+    box-shadow: 
+      0 0 20px rgba(0, 255, 255, 0.5),
+      0 0 40px rgba(255, 0, 255, 0.3),
+      inset 0 0 20px rgba(255, 255, 255, 0.1);
+  }
+  to {
+    box-shadow: 
+      0 0 30px rgba(0, 255, 255, 0.8),
+      0 0 60px rgba(255, 0, 255, 0.5),
+      inset 0 0 30px rgba(255, 255, 255, 0.2);
+  }
+}
+
+.app-title {
+  color: #00ffff;
+  font-family: 'Orbitron', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+  letter-spacing: 2px;
+  position: relative;
+  z-index: 3;
+}
+
+.app-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 3;
+}
+
+/* 主内容区域 - 毛玻璃效果 */
 .content {
-  padding: 20px;
+  flex: 1;
+  padding: 28px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 24px 24px 0 0;
+  margin-top: -12px;
+  position: relative;
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.current-site-card {
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 28px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.current-site-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.current-site-card:hover::before {
+  transform: translateX(100%);
+}
+
+.current-site-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 20px 40px rgba(0, 255, 255, 0.2),
+    0 0 20px rgba(255, 0, 255, 0.3);
+  border-color: rgba(0, 255, 255, 0.6);
+}
+
+.site-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
+  border-radius: 12px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  box-shadow: 0 8px 16px rgba(0, 255, 255, 0.3);
+  animation: iconPulse 3s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.site-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
 }
 
 .current-site {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  word-break: break-all; /* 防止长域名溢出 */
+  font-size: 18px;
+  font-weight: 600;
+  color: #00ffff;
+  word-break: break-all;
+  line-height: 1.4;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
-.block-btn {
-  background-color: #34c759; /* 绿色 */
-  color: #fff;
+/* 按钮样式 - 未来科技风 */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.btn {
   border: none;
-  border-radius: 20px;
-  padding: 10px 20px;
+  border-radius: 16px;
+  padding: 18px 28px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  width: 80%;
-  margin-bottom: 10px;
-  transition: background-color 0.3s;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Orbitron', monospace;
+  letter-spacing: 1px;
 }
 
-.block-btn:hover {
-  background-color: #2ea44f; /* 深绿色（悬停效果） */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
-.edit-btn {
-  background-color: #e0e0e0; /* 灰色 */
-  color: #666;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  width: 80%;
-  transition: background-color 0.3s;
+.btn:hover::before {
+  left: 100%;
 }
 
-.edit-btn:hover {
-  background-color: #d0d0d0; /* 深灰色（悬停效果） */
+.btn-primary {
+  background: linear-gradient(135deg, #ff0080 0%, #ff4040 50%, #ff8000 100%);
+  color: white;
+  box-shadow: 
+    0 8px 20px rgba(255, 0, 128, 0.4),
+    0 0 20px rgba(255, 64, 64, 0.3);
+  border: 1px solid rgba(255, 0, 128, 0.5);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 12px 30px rgba(255, 0, 128, 0.6),
+    0 0 30px rgba(255, 64, 64, 0.5);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.2) 0%, rgba(255, 0, 255, 0.2) 100%);
+  color: #00ffff;
+  border: 1px solid rgba(0, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.3) 0%, rgba(255, 0, 255, 0.3) 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 255, 255, 0.3);
+}
+
+.btn-icon {
+  font-size: 20px;
+  filter: drop-shadow(0 0 5px currentColor);
+}
+
+/* 状态指示器 - 脉冲效果 */
+.status-indicator {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 12px;
+  height: 12px;
+  background: #00ff00;
+  border-radius: 50%;
+  animation: statusPulse 2s infinite;
+  box-shadow: 0 0 10px #00ff00;
+  z-index: 5;
+}
+
+@keyframes statusPulse {
+  0% {
+    box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00;
+    transform: scale(1.2);
+  }
+  100% {
+    box-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+    transform: scale(1);
+  }
+}
+
+/* 底部统计 - 全息数据面板 */
+.footer {
+  padding: 20px 28px;
+  text-align: center;
+  border-top: 1px solid rgba(0, 255, 255, 0.3);
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+  backdrop-filter: blur(20px);
+  position: relative;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #00ffff, transparent);
+  animation: dataFlow 3s linear infinite;
+}
+
+@keyframes dataFlow {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  min-width: 70px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.stat-item:hover::before {
+  transform: translateX(100%);
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 255, 255, 0.5);
+  box-shadow: 0 8px 16px rgba(0, 255, 255, 0.2);
+}
+
+.stat-number {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  color: #00ffff;
+  font-size: 18px;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+  animation: numberGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes numberGlow {
+  from { text-shadow: 0 0 10px rgba(0, 255, 255, 0.8); }
+  to { text-shadow: 0 0 20px rgba(0, 255, 255, 1), 0 0 30px rgba(0, 255, 255, 0.5); }
+}
+
+.stat-item > div:last-child {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* 响应式设计 */
+@media (max-width: 320px) {
+  body {
+    width: 320px;
+  }
+  
+  .content {
+    padding: 24px;
+  }
+}
+
+/* 加载动画 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popup-container > * {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.popup-container > *:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.popup-container > *:nth-child(3) {
+  animation-delay: 0.2s;
 }
 
   

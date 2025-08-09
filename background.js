@@ -1,22 +1,69 @@
-// 定义一个规则ID常量，以确保一致性
+// 定义规则ID常量
 const RULE_ID_START = 1000;
+const CONTENT_FILTER_RULE_START = 2000; // 内容过滤规则起始ID
 
-// 初始化阻止列表
+// 初始化变量
 let blockList = [];
-let isUpdatingRules = false; // 添加标志防止并发更新
+let contentFilterRules = []; // 添加内容过滤规则数组
+let isUpdatingRules = false;
 
-// 从存储加载黑名单
-chrome.storage.local.get('blockedSites', (data) => {
-  if (data.blockedSites) {
-    blockList = data.blockedSites;
-    console.log("初始黑名单:", blockList);
-    updateRules();
+// 内容过滤配置（与 options.js 保持一致）
+const CONTENT_FILTERS = {
+  adultContent: {
+    keywords: ['adult', 'xxx', 'porn', '18+', 'sex', 'nude'],
+    domains: ['pornhub.com', 'xvideos.com', 'xnxx.com', 'redtube.com']
+  },
+  gambling: {
+    keywords: ['casino', 'poker', 'bet', 'gambling', 'lottery'],
+    domains: ['bet365.com', 'pokerstars.com', 'casino.com']
+  },
+  socialMedia: {
+    keywords: [],
+    domains: ['facebook.com', 'instagram.com', 'twitter.com', 'tiktok.com', 'snapchat.com']
+  },
+  entertainment: {
+    keywords: ['game', 'video', 'movie', 'tv'],
+    domains: ['youtube.com', 'netflix.com', 'twitch.tv', 'steam.com']
   }
+};
+
+// 从存储加载所有设置
+chrome.storage.local.get(['blockedSites', 'contentFilters', 'filterLevel'], (data) => {
+  blockList = data.blockedSites || [];
+  loadContentFilterRules(data.contentFilters, data.filterLevel);
+  console.log("初始黑名单:", blockList);
+  console.log("初始内容过滤规则:", contentFilterRules);
+  updateRules();
 });
 
-// 更新拦截规则 - 完全重写的版本
+// 加载内容过滤规则
+function loadContentFilterRules(filters, level) {
+  filters = filters || {};
+  level = level || 'moderate';
+  
+  contentFilterRules = [];
+  
+  Object.keys(filters).forEach(filterType => {
+    if (filters[filterType] && CONTENT_FILTERS[filterType]) {
+      const config = CONTENT_FILTERS[filterType];
+      
+      let keywords = config.keywords;
+      let domains = config.domains;
+      
+      // 根据过滤强度调整
+      if (level === 'loose') {
+        keywords = []; // 宽松模式只使用明确域名
+      }
+      
+      contentFilterRules.push(...keywords, ...domains);
+    }
+  });
+  
+  console.log('内容过滤规则已加载:', contentFilterRules);
+}
+
+// 更新拦截规则
 function updateRules() {
-  // 防止并发更新
   if (isUpdatingRules) {
     console.log("规则更新正在进行中，跳过此次更新");
     return;
@@ -29,25 +76,22 @@ function updateRules() {
     .then((existingRules) => {
       const existingRuleIds = existingRules.map(rule => rule.id);
       
-      // 如果没有既有规则要清除，直接添加新规则
       if (existingRuleIds.length === 0) {
         addNewRules();
         return;
       }
       
-      // 清除所有现有规则
       return chrome.declarativeNetRequest.updateDynamicRules({
         removeRuleIds: existingRuleIds
       }).then(() => {
         console.log("已清除现有规则");
-        // 增加延迟确保清除操作完成，并验证清除结果
         return new Promise(resolve => {
           setTimeout(() => {
             chrome.declarativeNetRequest.getDynamicRules().then(rules => {
               console.log("清除后剩余规则数量:", rules.length);
               resolve();
             });
-          }, 200); // 增加延迟时间
+          }, 200);
         });
       }).then(() => {
         addNewRules();
@@ -59,23 +103,24 @@ function updateRules() {
     });
 }
 
-// 单独封装添加新规则的函数
-// 改进域名匹配逻辑
+// 添加新规则（合并手动屏蔽和内容过滤）
 function addNewRules() {
-  if (blockList.length === 0) {
-    console.log("黑名单为空，无需添加规则");
+  const allSites = [...new Set([...blockList, ...contentFilterRules])];
+  
+  if (allSites.length === 0) {
+    console.log("没有需要屏蔽的网站");
     isUpdatingRules = false;
     return;
   }
   
-  // 先获取当前规则，确保没有冲突
   chrome.declarativeNetRequest.getDynamicRules().then(existingRules => {
     const existingIds = existingRules.map(rule => rule.id);
     console.log("添加规则前的现有规则ID:", existingIds);
     
-    const rules = blockList.map((site, index) => {
+    const rules = allSites.map((site, index) => {
       const cleanSite = site.replace(/^https?:\/\//, '').split('/')[0];
-      const ruleId = RULE_ID_START + index;
+      const isContentFilter = contentFilterRules.includes(site);
+      const ruleId = isContentFilter ? CONTENT_FILTER_RULE_START + index : RULE_ID_START + index;
       
       // 检查ID冲突
       if (existingIds.includes(ruleId)) {
@@ -85,20 +130,21 @@ function addNewRules() {
       
       return {
         id: ruleId,
-        priority: 1,
+        priority: isContentFilter ? 2 : 1, // 内容过滤规则优先级更高
         action: {
           type: "redirect",
           redirect: {
-            url: chrome.runtime.getURL("blocked.html") + "?site=" + encodeURIComponent(cleanSite)
+            url: chrome.runtime.getURL("blocked.html") + 
+                 "?site=" + encodeURIComponent(cleanSite) + 
+                 (isContentFilter ? "&reason=content-filter" : "")
           }
         },
         condition: {
-          // 同时匹配主域名和子域名
           urlFilter: `*://*${cleanSite}/*`,
           resourceTypes: ["main_frame"]
         }
       };
-    }).filter(rule => rule !== null); // 过滤掉null值
+    }).filter(rule => rule !== null);
     
     if (rules.length === 0) {
       console.log("没有新规则需要添加");
@@ -106,18 +152,16 @@ function addNewRules() {
       return;
     }
     
-    // 添加新规则
     return chrome.declarativeNetRequest.updateDynamicRules({
       addRules: rules
     })
     .then(() => {
       console.log(`已成功添加 ${rules.length} 条拦截规则:`, rules);
-      
-      // 验证规则是否真的被添加
       return chrome.declarativeNetRequest.getDynamicRules();
     })
     .then(currentRules => {
       console.log("当前活跃规则:", currentRules);
+      console.log(`总共 ${currentRules.length} 条规则生效`);
     });
   })
   .catch(error => {
@@ -128,20 +172,53 @@ function addNewRules() {
   });
 }
 
-// 监听黑名单更新
+// 在 addNewRules 函数中，当添加规则时记录统计
+// 监听来自 options 页面的消息
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'updateContentFilters') {
+    console.log('收到内容过滤更新请求');
+    chrome.storage.local.get(['contentFilters', 'filterLevel'], (data) => {
+      loadContentFilterRules(data.contentFilters, data.filterLevel);
+      updateRules();
+    });
+  }
+});
+
+// 监听存储变化
 chrome.storage.onChanged.addListener((changes) => {
+  let needUpdate = false;
+  
   if (changes.blockedSites) {
     console.log("检测到黑名单更新:", changes.blockedSites.newValue);
     blockList = changes.blockedSites.newValue || [];
+    needUpdate = true;
+  }
+  
+  if (changes.contentFilters || changes.filterLevel) {
+    console.log("检测到内容过滤设置更新");
+    chrome.storage.local.get(['contentFilters', 'filterLevel'], (data) => {
+      loadContentFilterRules(data.contentFilters, data.filterLevel);
+      updateRules();
+    });
+    return; // 避免重复更新
+  }
+  
+  if (needUpdate) {
     updateRules();
   }
 });
 
-// 添加安装或更新监听器，确保扩展初始化时规则被正确应用
+// 扩展安装或更新时初始化
 chrome.runtime.onInstalled.addListener(() => {
   console.log("扩展已安装或更新，正在初始化规则...");
-  chrome.storage.local.get('blockedSites', (data) => {
+  chrome.storage.local.get(['blockedSites', 'contentFilters', 'filterLevel'], (data) => {
     blockList = data.blockedSites || [];
+    loadContentFilterRules(data.contentFilters, data.filterLevel);
     updateRules();
   });
+});
+
+// 在规则添加成功后，发送消息给popup
+chrome.runtime.sendMessage({ action: 'siteBlocked' }).catch(() => {
+  // 忽略错误，popup可能未打开
 });
