@@ -1,4 +1,4 @@
-
+// blocked.js
 const urlParams = new URLSearchParams(window.location.search);
 const blockedSite = urlParams.get('site');
 
@@ -12,6 +12,8 @@ if (blockedSite) {
 }
 
 // 添加返回按钮功能（如果需要）
-// document.getElementById('back-btn')?.addEventListener('click', function() {
-//   window.close();
-// });
+document.getElementById('back-btn')?.addEventListener('click', function() {
+  console.log('Opening a new tab...');
+  // Open a new tab to Chrome new tab page
+  chrome.tabs.create({ url: 'chrome://newtab/' });
+});

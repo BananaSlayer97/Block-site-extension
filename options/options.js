@@ -1,6 +1,9 @@
 // options.js
 let blockedSites = [];
 
+// The cleanSiteUrl function is now loaded globally via urlUtils.js in options.html,
+// so its local definition here is no longer needed.
+
 function renderList() {
   const list = document.getElementById('site-list');
   list.innerHTML = '';
@@ -38,8 +41,8 @@ function removeSite(site) {
 document.getElementById('add-site').addEventListener('click', function() {
   let site = document.getElementById('site-input').value.trim();
   
-  // 改进网站格式验证
-  site = site.replace(/^https?:\/\//, '').split('/')[0].replace(/^www\./, '');
+  // Use the globally available cleanSiteUrl function
+  site = cleanSiteUrl(site);
   
   // 更严格的域名验证
   const domainRegex = /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?\.[a-zA-Z]{2,}$/;

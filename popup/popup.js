@@ -1,19 +1,10 @@
-// 显示当前网站和阻止网站数量
-chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-  if (tabs[0] && tabs[0].url) {
-    try {
-      const url = new URL(tabs[0].url);
-      let site = url.hostname.replace(/^www\./, '');
-      document.getElementById('current-site').textContent = site;
-    } catch (error) {
-      document.getElementById('current-site').textContent = 'Invalid URL';
-    }
-  }
-});
+// popup.js
+
+// The cleanSiteUrl function is now loaded globally via urlUtils.js in popup.html,
+// so its local definition here is no longer needed.
 
 chrome.storage.local.get('blockedSites', (data) => {
   const count = data.blockedSites?.length || 0;
-  // 如果需要显示计数，可以添加相应元素
   console.log(`当前阻止网站数量: ${count}`);
 });
 
@@ -21,7 +12,21 @@ document.getElementById('edit-block-list').onclick = () => {
   chrome.runtime.openOptionsPage();
 };
 
-// 阻止当前网站
+// Display the current site in the popup
+chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+  if (tabs[0] && tabs[0].url) {
+    try {
+      const url = new URL(tabs[0].url);
+      // Use the globally available cleanSiteUrl function
+      let site = cleanSiteUrl(url.hostname);
+      document.getElementById('current-site').textContent = site;
+    } catch (error) {
+      document.getElementById('current-site').textContent = 'Invalid URL';
+    }
+  }
+});
+
+// 直接在当前网址进行封锁
 document.getElementById('block-current-site').addEventListener('click', function() {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     if (!tabs[0] || !tabs[0].url) {
@@ -31,7 +36,8 @@ document.getElementById('block-current-site').addEventListener('click', function
     
     try {
       const url = new URL(tabs[0].url);
-      let site = url.hostname.replace(/^www\./, '');
+      // Use the globally available cleanSiteUrl function
+      let site = cleanSiteUrl(url.hostname);
       
       // 检查是否为特殊页面
       if (url.protocol === 'chrome:' || url.protocol === 'chrome-extension:') {
@@ -50,6 +56,7 @@ document.getElementById('block-current-site').addEventListener('click', function
         blockedSites.push(site);
         chrome.storage.local.set({ blockedSites }, function() {
           console.log(`已阻止网站: ${site}`);
+          alert(`'${site}' 已添加到阻止列表。刷新页面或导航离开以使阻止生效。`);
           // 关闭当前标签页
           chrome.tabs.remove(tabs[0].id);
           // 跳转到阻止页面
