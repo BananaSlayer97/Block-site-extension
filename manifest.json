@@ -1,7 +1,10 @@
 {
   "manifest_version": 3,  
   "name": "Focus Guard",
-  "version": "1.0",
+  "version": "1.0.0",
+  "description": "一个简洁高效的网站屏蔽扩展，帮助您提升工作和学习专注度",
+  "author": "BananaSlayer97",
+  "homepage_url": "https://github.com/BananaSlayer97/Block-site-extension",
   "permissions": [
     "declarativeNetRequest","storage","tabs"
   ],
@@ -19,7 +22,9 @@
     }
   },
   "icons": {
-    "48": "icons/icon48.png"
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "options_page": "options/options.html",
   "web_accessible_resources": [

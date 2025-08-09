@@ -40,10 +40,17 @@ function updateRules() {
         removeRuleIds: existingRuleIds
       }).then(() => {
         console.log("已清除现有规则");
-        // 添加延迟确保清除操作完成
-        setTimeout(() => {
-          addNewRules();
-        }, 100);
+        // 增加延迟确保清除操作完成，并验证清除结果
+        return new Promise(resolve => {
+          setTimeout(() => {
+            chrome.declarativeNetRequest.getDynamicRules().then(rules => {
+              console.log("清除后剩余规则数量:", rules.length);
+              resolve();
+            });
+          }, 200); // 增加延迟时间
+        });
+      }).then(() => {
+        addNewRules();
       });
     })
     .catch(error => {
@@ -61,38 +68,57 @@ function addNewRules() {
     return;
   }
   
-  const rules = blockList.map((site, index) => {
-    const cleanSite = site.replace(/^https?:\/\//, '').split('/')[0];
+  // 先获取当前规则，确保没有冲突
+  chrome.declarativeNetRequest.getDynamicRules().then(existingRules => {
+    const existingIds = existingRules.map(rule => rule.id);
+    console.log("添加规则前的现有规则ID:", existingIds);
     
-    return {
-      id: RULE_ID_START + index,
-      priority: 1,
-      action: {
-        type: "redirect",
-        redirect: {
-          url: chrome.runtime.getURL("blocked.html") + "?site=" + encodeURIComponent(cleanSite)
-        }
-      },
-      condition: {
-        // 同时匹配主域名和子域名
-        urlFilter: `*://*${cleanSite}/*`,
-        resourceTypes: ["main_frame"]
+    const rules = blockList.map((site, index) => {
+      const cleanSite = site.replace(/^https?:\/\//, '').split('/')[0];
+      const ruleId = RULE_ID_START + index;
+      
+      // 检查ID冲突
+      if (existingIds.includes(ruleId)) {
+        console.warn(`规则ID ${ruleId} 已存在，跳过添加`);
+        return null;
       }
-    };
-  });
-  
-  // 添加新规则
-  chrome.declarativeNetRequest.updateDynamicRules({
-    addRules: rules
-  })
-  .then(() => {
-    console.log(`已成功添加 ${rules.length} 条拦截规则:`, rules);
+      
+      return {
+        id: ruleId,
+        priority: 1,
+        action: {
+          type: "redirect",
+          redirect: {
+            url: chrome.runtime.getURL("blocked.html") + "?site=" + encodeURIComponent(cleanSite)
+          }
+        },
+        condition: {
+          // 同时匹配主域名和子域名
+          urlFilter: `*://*${cleanSite}/*`,
+          resourceTypes: ["main_frame"]
+        }
+      };
+    }).filter(rule => rule !== null); // 过滤掉null值
     
-    // 验证规则是否真的被添加
-    return chrome.declarativeNetRequest.getDynamicRules();
-  })
-  .then(currentRules => {
-    console.log("当前活跃规则:", currentRules);
+    if (rules.length === 0) {
+      console.log("没有新规则需要添加");
+      isUpdatingRules = false;
+      return;
+    }
+    
+    // 添加新规则
+    return chrome.declarativeNetRequest.updateDynamicRules({
+      addRules: rules
+    })
+    .then(() => {
+      console.log(`已成功添加 ${rules.length} 条拦截规则:`, rules);
+      
+      // 验证规则是否真的被添加
+      return chrome.declarativeNetRequest.getDynamicRules();
+    })
+    .then(currentRules => {
+      console.log("当前活跃规则:", currentRules);
+    });
   })
   .catch(error => {
     console.error("添加规则出错:", error);
