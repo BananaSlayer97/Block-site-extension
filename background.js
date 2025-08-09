@@ -3,6 +3,7 @@ const RULE_ID_START = 1000;
 
 // 初始化阻止列表
 let blockList = [];
+let isUpdatingRules = false; // 添加标志防止并发更新
 
 // 从存储加载黑名单
 chrome.storage.local.get('blockedSites', (data) => {
@@ -15,6 +16,14 @@ chrome.storage.local.get('blockedSites', (data) => {
 
 // 更新拦截规则 - 完全重写的版本
 function updateRules() {
+  // 防止并发更新
+  if (isUpdatingRules) {
+    console.log("规则更新正在进行中，跳过此次更新");
+    return;
+  }
+  
+  isUpdatingRules = true;
+  
   // 首先清除所有现有规则
   chrome.declarativeNetRequest.getDynamicRules()
     .then((existingRules) => {
@@ -31,11 +40,15 @@ function updateRules() {
         removeRuleIds: existingRuleIds
       }).then(() => {
         console.log("已清除现有规则");
-        addNewRules();
+        // 添加延迟确保清除操作完成
+        setTimeout(() => {
+          addNewRules();
+        }, 100);
       });
     })
     .catch(error => {
       console.error("获取或清除规则出错:", error);
+      isUpdatingRules = false;
     });
 }
 
@@ -44,6 +57,7 @@ function updateRules() {
 function addNewRules() {
   if (blockList.length === 0) {
     console.log("黑名单为空，无需添加规则");
+    isUpdatingRules = false;
     return;
   }
   
@@ -82,6 +96,9 @@ function addNewRules() {
   })
   .catch(error => {
     console.error("添加规则出错:", error);
+  })
+  .finally(() => {
+    isUpdatingRules = false;
   });
 }
 
