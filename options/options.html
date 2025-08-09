@@ -1,122 +1,133 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Focus Guard - 设置</title>
+    <meta charset="utf-8">
+    <title data-i18n="settings">设置 - Focus Guard</title>
     <link rel="stylesheet" href="options.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <!-- 页面头部 -->
-        <div class="page-header">
-            <h1 class="page-title">Focus Guard</h1>
-            <p class="page-subtitle">专注守护者 - 智能网站屏蔽管理</p>
-        </div>
+        <header class="page-header">
+            <h1 class="page-title" data-i18n="extensionName">Focus Guard</h1>
+            <div class="language-selector">
+                <label data-i18n="language">语言:</label>
+                <select id="languageSelect" class="language-select">
+                    <!-- 动态生成选项 -->
+                </select>
+            </div>
+        </header>
         
-        <!-- 网站管理卡片 -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-icon">
-                    <i class="material-icons">web</i>
+        <main class="main-content">
+            <section class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="material-icons">web</i>
+                    </div>
+                    <div>
+                        <h2 class="card-title" data-i18n="websiteManagement">网站管理</h2>
+                        <p class="card-description" data-i18n="websiteManagementDesc">添加和管理需要屏蔽的网站</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="card-title">网站管理</h2>
-                    <p class="card-description">添加和管理需要屏蔽的网站</p>
+                <div class="input-group">
+                    <input type="text" id="siteInput" class="input-field" data-i18n="enterWebsiteUrl" placeholder="输入网站地址">
+                    <button id="addSite" class="btn-add" data-i18n="addWebsite">
+                        <i class="material-icons">add</i>
+                        添加网站
+                    </button>
                 </div>
-            </div>
+                <ul id="siteList" class="site-list">
+                    <!-- 动态生成列表项 -->
+                </ul>
+            </section>
             
-            <div class="input-group">
-                <input type="text" id="siteInput" class="input-field" placeholder="输入要屏蔽的网站 (例如: facebook.com)">
-                <button id="addSite" class="btn-add">
-                    <i class="material-icons">add</i>
-                    添加网站
-                </button>
-            </div>
-            
-            <ul id="siteList" class="site-list"></ul>
-        </div>
-
-        <!-- 智能内容过滤卡片 -->
-        <div class="card">
-            <div class="card-header">
-                <div class="card-icon">
-                    <i class="material-icons">security</i>
-                </div>
-                <div>
-                    <h2 class="card-title">智能内容过滤</h2>
-                    <p class="card-description">启用智能过滤功能，自动屏蔽不当内容网站</p>
-                </div>
-            </div>
-            
-            <div class="filter-grid">
-                <div class="filter-item" data-filter="adult">
-                    <div class="filter-header">
-                        <h3 class="filter-title">成人内容过滤</h3>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="adultContentFilter">
-                            <span class="toggle-slider"></span>
-                        </label>
+            <section class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="material-icons">filter_list</i>
                     </div>
-                    <p class="filter-description">自动屏蔽包含成人内容的网站</p>
-                </div>
-
-                <div class="filter-item" data-filter="gambling">
-                    <div class="filter-header">
-                        <h3 class="filter-title">赌博网站过滤</h3>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="gamblingFilter">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    <p class="filter-description">屏蔽在线赌博和博彩网站</p>
-                </div>
-
-                <div class="filter-item" data-filter="social">
-                    <div class="filter-header">
-                        <h3 class="filter-title">社交媒体过滤</h3>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="socialMediaFilter">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    <p class="filter-description">屏蔽主要社交媒体平台</p>
-                </div>
-
-                <div class="filter-item" data-filter="entertainment">
-                    <div class="filter-header">
-                        <h3 class="filter-title">娱乐网站过滤</h3>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="entertainmentFilter">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    <p class="filter-description">屏蔽视频、游戏等娱乐网站</p>
-                </div>
-            </div>
-
-            <!-- 过滤强度设置 -->
-            <div style="margin-top: 24px;">
-                <h3 style="margin-bottom: 16px; color: #1e293b; font-size: 16px; font-weight: 600;">过滤强度</h3>
-                <div class="level-selector">
-                    <div class="level-option" data-level="strict">
-                        <input type="radio" name="filterLevel" value="strict" style="display: none;">
-                        严格
-                    </div>
-                    <div class="level-option active" data-level="moderate">
-                        <input type="radio" name="filterLevel" value="moderate" checked style="display: none;">
-                        中等
-                    </div>
-                    <div class="level-option" data-level="loose">
-                        <input type="radio" name="filterLevel" value="loose" style="display: none;">
-                        宽松
+                    <div>
+                        <h2 class="card-title" data-i18n="intelligentFiltering">智能内容过滤</h2>
+                        <p class="card-description" data-i18n="intelligentFilteringDesc">自动识别和屏蔽特定类型的内容</p>
                     </div>
                 </div>
-            </div>
-        </div>
+                <div class="filter-grid">
+                    <div class="filter-item">
+                        <div class="filter-header">
+                            <span class="filter-title" data-i18n="adultContent">成人内容</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="adultContent">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <p class="filter-description" data-i18n="adultContentDesc">屏蔽成人和不当内容</p>
+                    </div>
+                    <div class="filter-item">
+                        <div class="filter-header">
+                            <span class="filter-title" data-i18n="gambling">赌博</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="gambling">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <p class="filter-description" data-i18n="gamblingDesc">屏蔽赌博相关网站</p>
+                    </div>
+                    <div class="filter-item">
+                        <div class="filter-header">
+                            <span class="filter-title" data-i18n="socialMedia">社交媒体</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="socialMedia">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <p class="filter-description" data-i18n="socialMediaDesc">屏蔽社交媒体平台</p>
+                    </div>
+                    <div class="filter-item">
+                        <div class="filter-header">
+                            <span class="filter-title" data-i18n="gaming">游戏</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="gaming">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <p class="filter-description" data-i18n="gamingDesc">屏蔽在线游戏网站</p>
+                    </div>
+                    <div class="filter-item">
+                        <div class="filter-header">
+                            <span class="filter-title" data-i18n="shopping">购物</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="shopping">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <p class="filter-description" data-i18n="shoppingDesc">屏蔽购物网站</p>
+                    </div>
+                    <div class="filter-item">
+                        <div class="filter-header">
+                            <span class="filter-title" data-i18n="news">新闻</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="news">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <p class="filter-description" data-i18n="newsDesc">屏蔽新闻网站</p>
+                    </div>
+                    <div class="filter-item">
+                        <div class="filter-header">
+                            <span class="filter-title" data-i18n="entertainment">娱乐</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="entertainment">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <p class="filter-description" data-i18n="entertainmentDesc">屏蔽娱乐网站</p>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
-
+    
     <script src="../utils/urlUtils.js"></script>
+    <script src="../utils/i18n.js"></script>
     <script src="options.js"></script>
 </body>
 </html>

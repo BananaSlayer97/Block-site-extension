@@ -1,59 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Focus Guard</title>
+    <meta charset="utf-8">
+    <title data-i18n="extensionName">Focus Guard</title>
     <link rel="stylesheet" href="popup.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="popup-container">
-        <div class="status-indicator"></div>
-        
-        <div class="header">
-            <div class="logo">🛡️</div>
-            <div class="app-title">Focus Guard</div>
-            <div class="app-subtitle">专注守护者</div>
-        </div>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🛡️</span>
+                <span class="logo-text" data-i18n="extensionName">Focus Guard</span>
+            </div>
+        </header>
         
         <div class="content">
             <div class="current-site-card">
-                <div class="site-icon" id="siteIcon">🌐</div>
-                <div class="site-label">当前网站</div>
-                <div class="current-site" id="currentSite">加载中...</div>
+                <div class="site-info">
+                    <span class="site-icon" id="siteIcon">🌐</span>
+                    <div class="site-details">
+                        <div class="site-label" data-i18n="currentSite">当前网站</div>
+                        <div class="current-site" id="currentSite" data-i18n="loading">加载中...</div>
+                    </div>
+                </div>
             </div>
             
             <div class="button-group">
-                <button id="blockSite" class="btn btn-primary">
-                    <span class="btn-icon">🚫</span>
-                    屏蔽此网站
-                </button>
-                <button id="openOptions" class="btn btn-secondary">
-                    <span class="btn-icon">⚙️</span>
-                    管理屏蔽列表
-                </button>
+                <button class="btn btn-primary" id="blockSite" data-i18n="blockSite">屏蔽当前网站</button>
+                <button class="btn btn-secondary" id="openOptions" data-i18n="manageList">管理屏蔽列表</button>
             </div>
         </div>
         
-        <div class="footer">
+        <footer class="footer">
             <div class="stats">
                 <div class="stat-item">
                     <div class="stat-number" id="blockedCount">0</div>
-                    <div>已屏蔽</div>
+                    <div class="stat-label" data-i18n="blockedCount">已屏蔽</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number" id="todayBlocked">0</div>
-                    <div>今日拦截</div>
+                    <div class="stat-label" data-i18n="todayBlocked">今日拦截</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number" id="focusTime">0h</div>
-                    <div>专注时间</div>
+                    <div class="stat-number" id="focusTime">0m</div>
+                    <div class="stat-label" data-i18n="focusTime">专注时间</div>
                 </div>
             </div>
-        </div>
+        </footer>
     </div>
     
     <script src="../utils/urlUtils.js"></script>
+    <script src="../utils/i18n.js"></script>
     <script src="popup.js"></script>
 </body>
 </html>

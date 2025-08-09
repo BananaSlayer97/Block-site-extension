@@ -1,0 +1,134 @@
+{
+  "extensionName": {
+    "message": "Focus Guard - 专注守护"
+  },
+  "extensionDescription": {
+    "message": "智能网站屏蔽扩展，帮助您保持专注"
+  },
+  "currentSite": {
+    "message": "当前网站"
+  },
+  "blockSite": {
+    "message": "屏蔽当前网站"
+  },
+  "manageList": {
+    "message": "管理屏蔽列表"
+  },
+  "blockedCount": {
+    "message": "已屏蔽"
+  },
+  "todayBlocked": {
+    "message": "今日拦截"
+  },
+  "focusTime": {
+    "message": "专注时间"
+  },
+  "cannotBlockInternalPage": {
+    "message": "无法屏蔽浏览器内部页面"
+  },
+  "browserSettingsPage": {
+    "message": "浏览器设置页面"
+  },
+  "extensionPage": {
+    "message": "扩展程序页面"
+  },
+  "searchPage": {
+    "message": "搜索页面"
+  },
+  "devToolsPage": {
+    "message": "开发者工具"
+  },
+  "edgeBrowserPage": {
+    "message": "Edge浏览器页面"
+  },
+  "browserInfoPage": {
+    "message": "浏览器信息页面"
+  },
+  "localFile": {
+    "message": "本地文件"
+  },
+  "specialPage": {
+    "message": "特殊页面"
+  },
+  "unknownPage": {
+    "message": "未知页面"
+  },
+  "invalidUrl": {
+    "message": "无效网址"
+  },
+  "cannotBlock": {
+    "message": "无法屏蔽"
+  },
+  "cannotGetSiteInfo": {
+    "message": "无法获取当前网站信息"
+  },
+  "siteAlreadyBlocked": {
+    "message": "该网站已在屏蔽列表中"
+  },
+  "invalidUrlFormat": {
+    "message": "网站URL格式错误"
+  },
+  "websiteBlocked": {
+    "message": "网站已被屏蔽"
+  },
+  "accessDenied": {
+    "message": "访问被拒绝"
+  },
+  "blockedByFilter": {
+    "message": "此网站被智能内容过滤器屏蔽"
+  },
+  "goBack": {
+    "message": "返回上一页"
+  },
+  "openSettings": {
+    "message": "打开设置"
+  },
+  "websiteManagement": {
+    "message": "网站管理"
+  },
+  "addWebsite": {
+    "message": "添加网站"
+  },
+  "enterWebsiteUrl": {
+    "message": "输入网站地址"
+  },
+  "intelligentFiltering": {
+    "message": "智能内容过滤"
+  },
+  "adultContent": {
+    "message": "成人内容"
+  },
+  "gambling": {
+    "message": "赌博"
+  },
+  "socialMedia": {
+    "message": "社交媒体"
+  },
+  "gaming": {
+    "message": "游戏"
+  },
+  "shopping": {
+    "message": "购物"
+  },
+  "news": {
+    "message": "新闻"
+  },
+  "entertainment": {
+    "message": "娱乐"
+  },
+  "language": {
+    "message": "语言"
+  },
+  "settings": {
+    "message": "设置"
+  },
+  "remove": {
+    "message": "移除"
+  },
+  "loading": {
+    "message": "加载中..."
+  },
+  "cannotGetCurrentPage": {
+    "message": "无法获取当前页面"
+  }
+}

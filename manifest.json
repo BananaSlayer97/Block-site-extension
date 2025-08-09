@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,  
-  "name": "Focus Guard",
+  "name": "__MSG_extensionName__",
   "version": "1.0.0",
-  "description": "一个简洁高效的网站屏蔽扩展，帮助您提升工作和学习专注度",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "zh_CN",
   "author": "BananaSlayer97",
   "homepage_url": "https://github.com/BananaSlayer97/Block-site-extension",
   "permissions": [
@@ -29,7 +30,7 @@
   "options_page": "options/options.html",
   "web_accessible_resources": [
     {
-      "resources": ["blocked.html", "blocked.js"],
+      "resources": ["blocked.html", "blocked.js", "config/*", "_locales/*/*"],
       "matches": ["<all_urls>"]
     }
   ],

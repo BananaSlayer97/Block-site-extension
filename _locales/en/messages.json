@@ -1,0 +1,134 @@
+{
+  "extensionName": {
+    "message": "Focus Guard"
+  },
+  "extensionDescription": {
+    "message": "Smart website blocking extension to help you stay focused"
+  },
+  "currentSite": {
+    "message": "Current Site"
+  },
+  "blockSite": {
+    "message": "Block Current Site"
+  },
+  "manageList": {
+    "message": "Manage Block List"
+  },
+  "blockedCount": {
+    "message": "Blocked"
+  },
+  "todayBlocked": {
+    "message": "Today Blocked"
+  },
+  "focusTime": {
+    "message": "Focus Time"
+  },
+  "cannotBlockInternalPage": {
+    "message": "Cannot block browser internal pages"
+  },
+  "browserSettingsPage": {
+    "message": "Browser Settings Page"
+  },
+  "extensionPage": {
+    "message": "Extension Page"
+  },
+  "searchPage": {
+    "message": "Search Page"
+  },
+  "devToolsPage": {
+    "message": "Developer Tools"
+  },
+  "edgeBrowserPage": {
+    "message": "Edge Browser Page"
+  },
+  "browserInfoPage": {
+    "message": "Browser Info Page"
+  },
+  "localFile": {
+    "message": "Local File"
+  },
+  "specialPage": {
+    "message": "Special Page"
+  },
+  "unknownPage": {
+    "message": "Unknown Page"
+  },
+  "invalidUrl": {
+    "message": "Invalid URL"
+  },
+  "cannotBlock": {
+    "message": "Cannot Block"
+  },
+  "cannotGetSiteInfo": {
+    "message": "Cannot get current site information"
+  },
+  "siteAlreadyBlocked": {
+    "message": "This site is already in the block list"
+  },
+  "invalidUrlFormat": {
+    "message": "Invalid URL format"
+  },
+  "websiteBlocked": {
+    "message": "Website Blocked"
+  },
+  "accessDenied": {
+    "message": "Access Denied"
+  },
+  "blockedByFilter": {
+    "message": "This website was blocked by intelligent content filter"
+  },
+  "goBack": {
+    "message": "Go Back"
+  },
+  "openSettings": {
+    "message": "Open Settings"
+  },
+  "websiteManagement": {
+    "message": "Website Management"
+  },
+  "addWebsite": {
+    "message": "Add Website"
+  },
+  "enterWebsiteUrl": {
+    "message": "Enter website URL"
+  },
+  "intelligentFiltering": {
+    "message": "Intelligent Content Filtering"
+  },
+  "adultContent": {
+    "message": "Adult Content"
+  },
+  "gambling": {
+    "message": "Gambling"
+  },
+  "socialMedia": {
+    "message": "Social Media"
+  },
+  "gaming": {
+    "message": "Gaming"
+  },
+  "shopping": {
+    "message": "Shopping"
+  },
+  "news": {
+    "message": "News"
+  },
+  "entertainment": {
+    "message": "Entertainment"
+  },
+  "language": {
+    "message": "Language"
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "remove": {
+    "message": "Remove"
+  },
+  "loading": {
+    "message": "Loading..."
+  },
+  "cannotGetCurrentPage": {
+    "message": "Cannot get current page"
+  }
+}

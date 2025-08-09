@@ -1,11 +1,23 @@
 // popup.js
 
-// 获取并显示已屏蔽网站数量
-chrome.storage.local.get('blockedSites', (data) => {
-  const count = data.blockedSites?.length || 0;
-  document.getElementById('blockedCount').textContent = count;
-  console.log(`当前阻止网站数量: ${count}`);
-});
+// 等待 i18n 初始化完成
+async function initializePopup() {
+  await i18n.initialize();
+  i18n.updateUI();
+  
+  // 获取并显示已屏蔽网站数量
+  chrome.storage.local.get('blockedSites', (data) => {
+    const count = data.blockedSites?.length || 0;
+    document.getElementById('blockedCount').textContent = count;
+    console.log(`当前阻止网站数量: ${count}`);
+  });
+  
+  // 显示当前网站
+  displayCurrentSite();
+  
+  // 更新统计显示
+  updateStatsDisplay();
+}
 
 // 管理屏蔽列表按钮
 document.getElementById('openOptions').onclick = () => {
@@ -17,131 +29,113 @@ function isSpecialPage(url) {
   if (!url) return true;
   
   const specialProtocols = [
-    'chrome:',
-    'chrome-extension:',
-    'chrome-search:',
-    'chrome-devtools:',
-    'edge:',
-    'about:',
-    'moz-extension:',
-    'safari-extension:',
-    'file:'
+    'chrome:', 'chrome-extension:', 'chrome-search:', 'chrome-devtools:',
+    'edge:', 'about:', 'moz-extension:', 'safari-extension:', 'file:'
   ];
   
   return specialProtocols.some(protocol => url.startsWith(protocol));
 }
 
-// 获取页面类型描述
+// 获取页面类型描述（国际化版本）
 function getPageTypeDescription(url) {
-  if (!url) return '未知页面';
+  if (!url) return i18n.getMessage('unknownPage');
   
-  if (url.startsWith('chrome://')) return '浏览器设置页面';
-  if (url.startsWith('chrome-extension://')) return '扩展程序页面';
-  if (url.startsWith('chrome-search://')) return '搜索页面';
-  if (url.startsWith('chrome-devtools://')) return '开发者工具';
-  if (url.startsWith('edge://')) return 'Edge浏览器页面';
-  if (url.startsWith('about:')) return '浏览器信息页面';
-  if (url.startsWith('file://')) return '本地文件';
-  if (url.startsWith('moz-extension://')) return 'Firefox扩展页面';
-  if (url.startsWith('safari-extension://')) return 'Safari扩展页面';
+  if (url.startsWith('chrome://')) return i18n.getMessage('browserSettingsPage');
+  if (url.startsWith('chrome-extension://')) return i18n.getMessage('extensionPage');
+  if (url.startsWith('chrome-search://')) return i18n.getMessage('searchPage');
+  if (url.startsWith('chrome-devtools://')) return i18n.getMessage('devToolsPage');
+  if (url.startsWith('edge://')) return i18n.getMessage('edgeBrowserPage');
+  if (url.startsWith('about:')) return i18n.getMessage('browserInfoPage');
+  if (url.startsWith('file://')) return i18n.getMessage('localFile');
   
-  return '特殊页面';
+  return i18n.getMessage('specialPage');
 }
 
 // 显示当前网站
-chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-  const blockButton = document.getElementById('blockSite');
-  const currentSiteElement = document.getElementById('currentSite');
-  const siteIcon = document.getElementById('siteIcon');
-  
-  if (tabs[0] && tabs[0].url) {
-    const url = tabs[0].url;
+function displayCurrentSite() {
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    const blockButton = document.getElementById('blockSite');
+    const currentSiteElement = document.getElementById('currentSite');
+    const siteIcon = document.getElementById('siteIcon');
     
-    // 检查是否为特殊页面
-    if (isSpecialPage(url)) {
-      // 特殊页面处理
-      currentSiteElement.textContent = getPageTypeDescription(url);
-      currentSiteElement.style.color = '#888';
-      currentSiteElement.style.fontStyle = 'italic';
-      siteIcon.textContent = '🚫';
+    if (tabs[0] && tabs[0].url) {
+      const url = tabs[0].url;
       
-      // 禁用屏蔽按钮
-      blockButton.disabled = true;
-      blockButton.textContent = '无法屏蔽此页面';
-      blockButton.style.opacity = '0.5';
-      blockButton.style.cursor = 'not-allowed';
-      blockButton.title = '浏览器内部页面无法被屏蔽';
-      
-      return;
-    }
-    
-    try {
-      const urlObj = new URL(url);
-      let site = cleanSiteUrl(urlObj.hostname);
-      currentSiteElement.textContent = site;
-      currentSiteElement.style.color = '';
-      currentSiteElement.style.fontStyle = '';
-      
-      // 设置网站图标
-      if (urlObj.protocol === 'https:') {
-        siteIcon.textContent = '🔒';
-      } else if (urlObj.protocol === 'http:') {
-        siteIcon.textContent = '🌐';
-      } else {
-        siteIcon.textContent = '📄';
+      if (isSpecialPage(url)) {
+        currentSiteElement.textContent = getPageTypeDescription(url);
+        currentSiteElement.style.color = '#888';
+        currentSiteElement.style.fontStyle = 'italic';
+        siteIcon.textContent = '🚫';
+        
+        blockButton.disabled = true;
+        blockButton.textContent = i18n.getMessage('cannotBlockInternalPage');
+        blockButton.style.opacity = '0.5';
+        blockButton.style.cursor = 'not-allowed';
+        blockButton.title = i18n.getMessage('cannotBlockInternalPage');
+        
+        return;
       }
       
-      // 启用屏蔽按钮
-      blockButton.disabled = false;
-      blockButton.textContent = '屏蔽当前网站';
-      blockButton.style.opacity = '';
-      blockButton.style.cursor = '';
-      blockButton.title = '';
+      try {
+        const urlObj = new URL(url);
+        let site = cleanSiteUrl(urlObj.hostname);
+        currentSiteElement.textContent = site;
+        currentSiteElement.style.color = '';
+        currentSiteElement.style.fontStyle = '';
+        
+        if (urlObj.protocol === 'https:') {
+          siteIcon.textContent = '🔒';
+        } else if (urlObj.protocol === 'http:') {
+          siteIcon.textContent = '🌐';
+        } else {
+          siteIcon.textContent = '📄';
+        }
+        
+        blockButton.disabled = false;
+        blockButton.textContent = i18n.getMessage('blockSite');
+        blockButton.style.opacity = '';
+        blockButton.style.cursor = '';
+        blockButton.title = '';
+        
+      } catch (error) {
+        currentSiteElement.textContent = i18n.getMessage('invalidUrl');
+        currentSiteElement.style.color = '#ff6b6b';
+        siteIcon.textContent = '❌';
+        
+        blockButton.disabled = true;
+        blockButton.textContent = i18n.getMessage('cannotBlock');
+        blockButton.style.opacity = '0.5';
+        blockButton.style.cursor = 'not-allowed';
+        
+        console.error('URL解析错误:', error);
+      }
+    } else {
+      currentSiteElement.textContent = i18n.getMessage('cannotGetCurrentPage');
+      currentSiteElement.style.color = '#888';
+      siteIcon.textContent = '❓';
       
-    } catch (error) {
-      currentSiteElement.textContent = '无效网址';
-      currentSiteElement.style.color = '#ff6b6b';
-      siteIcon.textContent = '❌';
-      
-      // 禁用屏蔽按钮
       blockButton.disabled = true;
-      blockButton.textContent = '无法屏蔽';
+      blockButton.textContent = i18n.getMessage('cannotBlock');
       blockButton.style.opacity = '0.5';
       blockButton.style.cursor = 'not-allowed';
-      
-      console.error('URL解析错误:', error);
     }
-  } else {
-    currentSiteElement.textContent = '无法获取当前页面';
-    currentSiteElement.style.color = '#888';
-    siteIcon.textContent = '❓';
-    
-    // 禁用屏蔽按钮
-    blockButton.disabled = true;
-    blockButton.textContent = '无法屏蔽';
-    blockButton.style.opacity = '0.5';
-    blockButton.style.cursor = 'not-allowed';
-  }
-});
+  });
+}
 
 // 屏蔽当前网站按钮
 document.getElementById('blockSite').addEventListener('click', function() {
-  // 如果按钮被禁用，直接返回
-  if (this.disabled) {
-    return;
-  }
+  if (this.disabled) return;
   
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     if (!tabs[0] || !tabs[0].url) {
-      alert('无法获取当前网站信息');
+      alert(i18n.getMessage('cannotGetSiteInfo'));
       return;
     }
     
     const url = tabs[0].url;
     
-    // 再次检查是否为特殊页面（双重保险）
     if (isSpecialPage(url)) {
-      alert('无法屏蔽浏览器内部页面');
+      alert(i18n.getMessage('cannotBlockInternalPage'));
       return;
     }
     
@@ -153,7 +147,7 @@ document.getElementById('blockSite').addEventListener('click', function() {
         let blockedSites = data.blockedSites || [];
         
         if (blockedSites.includes(site)) {
-          alert('该网站已在屏蔽列表中');
+          alert(i18n.getMessage('siteAlreadyBlocked'));
           return;
         }
         
@@ -161,17 +155,15 @@ document.getElementById('blockSite').addEventListener('click', function() {
         chrome.storage.local.set({ blockedSites }, function() {
           console.log(`已屏蔽网站: ${site}`);
           
-          // 更新显示的屏蔽数量
           document.getElementById('blockedCount').textContent = blockedSites.length;
           
-          // 直接跳转到屏蔽页面
           chrome.tabs.update(tabs[0].id, {
             url: chrome.runtime.getURL('blocked.html') + '?site=' + encodeURIComponent(site)
           });
         });
       });
     } catch (error) {
-      alert('网站URL格式错误');
+      alert(i18n.getMessage('invalidUrlFormat'));
       console.error('URL解析错误:', error);
     }
   });
@@ -223,14 +215,12 @@ function updateStatsDisplay() {
   });
 }
 
-// 初始化统计数据
-document.addEventListener('DOMContentLoaded', function() {
-  updateStatsDisplay();
-});
-
 // 监听来自background的消息
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.action === 'siteBlocked') {
     recordBlockEvent();
   }
 });
+
+// 初始化
+document.addEventListener('DOMContentLoaded', initializePopup);
